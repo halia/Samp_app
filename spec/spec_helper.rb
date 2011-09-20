@@ -28,6 +28,14 @@ Spork.prefork do
     # examples within a transaction, comment the following line or assign false
     # instead of true.
     config.use_transactional_fixtures = true
+    
+    # Added this according Michael Hartl's tutorial screen.  Please confirm use.
+    ActiveSupport::Dependencies.clear
+    
+    def test_sign_in(user)
+      controller.sign_in(user)
+    end
+      
   end
 end
 

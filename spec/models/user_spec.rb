@@ -1,3 +1,17 @@
+# == Schema Information
+#
+# Table name: users
+#
+#  id                 :integer         not null, primary key
+#  name               :string(255)
+#  email              :string(255)
+#  created_at         :datetime
+#  updated_at         :datetime
+#  encrypted_password :string(255)
+#  salt               :string(255)
+#  admin              :boolean         default(FALSE)
+#
+
 require 'spec_helper'
 
 describe User do
@@ -155,41 +169,54 @@ describe User do
     end
   end
   
-  describe "admin attribute" do
+    describe "admin attribute" do
   
+      before(:each) do
+        @user = User.create!(@attr)
+      end
+    
+      it "should respond to admin" do
+        @user.should respond_to(:admin)
+      end
+  
+      it "should not be an admin by default" do
+        @user.should_not be_admin
+      end
+   
+      it "should be convertible to an admin" do
+        @user.toggle!(:admin)
+        @user.should be_admin
+      end
+    end
+  end  
+
+  describe "micropost associations" do
+   
     before(:each) do
-      @user = User.create!(@attr)
+    @user = User.create(@attr)
+    @mp1 = Factory(:micropost, :user => @user, :created_at => 1.day.ago)
+    @mp2 = Factory(:micropost, :user => @user, :created_at => 1.hour.ago)
+    end
+   
+    it "should have a microposts attribute" do
+      @user.should respond_to(:microposts)
+    end
+  
+    it "should have the right microposts in the right order" do
+      @user.microposts.should == [@mp2, @mp1]
     end
     
-  it "should respond to admin" do
-    @user.should respond_to(:admin)
+    it "should destroy associated microposts" do
+      @user.destroy
+      [@mp1, @mp2].each do |micropost|
+        lambda do
+          Micropost.find(micropost)
+        end.should raise_error(ActiveRecord::RecordNotFound)
+      end
+    end
+    
   end
-  
-  it "should not be an admin by default" do
-    @user.should_not be_admin
-  end
-   
-  it "should be convertible to an admin" do
-    @user.toggle!(:admin)
-    @user.should be_admin
-  end
-  
-  end
-  
-  end  
+
 end
 
-# == Schema Information
-#
-# Table name: users
-#
-#  id                 :integer         not null, primary key
-#  name               :string(255)
-#  email              :string(255)
-#  created_at         :datetime
-#  updated_at         :datetime
-#  encrypted_password :string(255)
-#  salt               :string(255)
-#  admin              :boolean         default(FALSE)
-#
 

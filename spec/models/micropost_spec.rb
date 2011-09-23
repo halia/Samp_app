@@ -24,9 +24,9 @@ describe Micropost do
 
   describe "user association" do
     
-     before(:each) do
+    before(:each) do
       @micropost = @user.microposts.create(@attr)
-     end
+    end
     
     it "should have a user attribute" do
       @micropost.should respond_to(:user)

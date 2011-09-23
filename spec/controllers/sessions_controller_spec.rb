@@ -15,8 +15,7 @@ describe SessionsController do
     end
   end
 
-# Reviewing issues on page - sign_in method undefined
-  
+
   describe "POST 'create" do
     
     describe "failure" do
@@ -31,8 +30,8 @@ describe SessionsController do
       end
       
       it "should have the right title" do
-      post :create, :session => @attr
-      response.should have_selector('title', :content => "Sign in")
+        post :create, :session => @attr
+        response.should have_selector('title', :content => "Sign in")
       end
       
       it "should have an error message" do
@@ -49,9 +48,9 @@ describe SessionsController do
       end
       
       it "should sign the user in" do
-      post :create, :session => @attr
-      controller.current_user.should == @user
-      controller.should be_signed_in
+        post :create, :session => @attr
+        controller.current_user.should == @user
+        controller.should be_signed_in
       end
       
       it "should redirect to the user show page" do
@@ -69,5 +68,4 @@ describe SessionsController do
       response.should redirect_to(root_path)
     end
   end
-  
 end
